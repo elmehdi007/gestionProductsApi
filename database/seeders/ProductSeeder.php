@@ -1,0 +1,33 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use DB;
+use App\Helpers\Enum\RoleIds;
+use Illuminate\Support\Str;
+
+class ProductSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     *
+     * @return void
+     */
+    public function run()
+    {        
+
+        $data = [
+            ['id' => (string) Str::uuid(),"name"=> "Pong", "category"=> "Games", "sku"=> "A0001", "price"=> 69.99, "quantity"=> 20],
+            ['id' => (string) Str::uuid(),"name"=> "GameStation 5", "category"=> "Games", "sku"=> "A0002", "price"=> 269.99, "quantity"=> 15],
+            ['id' => (string) Str::uuid(),"name"=> "AP Oman PC - Aluminum", "category"=> "Computers", "sku"=> "A0003", "price"=> 1399.99, "quantity"=> 10],
+            ['id' => (string) Str::uuid(),"name"=> "Fony UHD HDR 55\" 4k TV", "category"=> "TVs and Accessories", "sku"=> "A0004", "price"=> 1399.99, "quantity"=> 5],
+        ];
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        DB::table('products')->truncate();
+        DB::table('products')->insert($data);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    }
+}
