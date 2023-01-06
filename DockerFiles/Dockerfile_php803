@@ -1,0 +1,32 @@
+FROM php:8.0.3-cli-buster
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+# Get Debian up-to-date
+# Update packages
+RUN apt-get update
+RUN apt-get -y autoremove
+RUN apt-get -y clean
+
+# Install PHP and composer dependencies
+RUN apt-get install -qq git rsync curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev zlib1g-dev libicu-dev g++ 
+RUN apt-get -y -f install iputils-ping net-tools python3 libzip-dev libldap2-dev libgmp-dev zip tree mariadb-client
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get install -y nodejs
+
+# Clear out the local repository of retrieved package files
+RUN apt-get clean
+
+# Install needed extensions
+# Here you can install any other extension that you need during the test and deployment process
+#RUN docker-php-ext-install mcrypt pdo_mysql zip
+#RUN /usr/local/bin/docker-php-ext-configure pdo mysqli pdo_mysql  intl gd zip exif ldap gmp
+RUN /usr/local/bin/docker-php-ext-install pdo mysqli pdo_mysql  intl gd zip exif ldap gmp
+RUN /usr/local/bin/docker-php-ext-enable pdo mysqli pdo_mysql  intl gd zip exif ldap gmp
+
+# Install Composer
+RUN curl --silent --show-error https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+RUN php composer-setup.php 
+RUN cp /composer-setup.php /usr/bin/composer
+RUN php -r "unlink('composer-setup.php');"

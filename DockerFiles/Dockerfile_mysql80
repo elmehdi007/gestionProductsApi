@@ -1,0 +1,11 @@
+FROM mysql:8.0
+
+# Add a database
+ENV MYSQL_DATABASE stock_dev
+ENV MYSQL_ROOT_PASSWORD uL7sQ7jR7tP7zC?9a
+ENV MYSQL_PASSWORD uL7sQ7jR7tP7zC?9a
+ENV MYSQL_USER stock_dev
+
+# re-avoir avec migration laravel
+COPY database/backup-db /docker-entrypoint-initdb.d/
+EXPOSE 3306
